@@ -1,12 +1,13 @@
 import Head from 'next/head'
 import Link from 'next/link'
+import Date from '../components/date'
 import Layout from '../components/layout'
 import utilStyles from '../styles/utils.module.css'
 import posts from '../lib/posts'
 
 // return allData as props for Home 
 export async function getStaticProps() {
-  const allData = posts()
+  const allData = await posts()
   return {
     props: {
       allData
@@ -22,7 +23,7 @@ export default function Home({ allData }) {
       </Head>
       <section className={utilStyles.headingMd}>
         <p> Hello, I am Edward. I am a new grad from Lassonde School of Engineering, York University.
-          I am an aspiring Computer Engineer. Check out my posts {' '}<Link href="/Post"><a>here</a></Link>.
+          I am an aspiring Computer Engineer.
         </p>
         <p>
           This website was created using a template which you can find and use to build your own at {' '}
@@ -34,11 +35,11 @@ export default function Home({ allData }) {
         <ul className={utilStyles.list}>
           {allData.map(({id, date, title}) => (
             <li className={utilStyles.listItem} key={id}>
-              {title}
+              <Link href={`/posts/${id}`}>
+              <a>{title}</a>
+              </Link>
               <br />
-              {id}
-              <br />
-              {date}
+              <Date date={date} />
             </li>
           ))}
         </ul>

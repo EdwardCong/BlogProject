@@ -1,7 +1,8 @@
 import fs from 'fs' // file system
 import path from 'path'
 import matter from 'gray-matter'
-
+import remark from 'remark'
+import html from 'remark-html'
 // process.cwd() is current working directory
 const postsDir = path.join(process.cwd(), 'posts')
 
@@ -34,4 +35,31 @@ export default function posts() {
       return 0
     }
   })
+}
+
+export function postIds() {
+  const files = fs.readdirSync(postsDir)
+
+  return files.map(file => {
+    return {
+      params: {
+        id: file.replace(/\.md$/, '')
+      }
+    }
+  })
+}
+
+export async function postData(id) {
+  const fullPath = path.join(postsDir, `${id}.md`)
+  const content = fs.readFileSync(fullPath, "utf-8")
+  const result = matter(content)
+  const process = await remark()
+    .use(html)
+    .process(result.content)
+  const contentHtml = process.toString()
+  return {
+    id,
+    contentHtml,
+    ...result.data
+  }
 }
