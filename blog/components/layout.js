@@ -4,6 +4,7 @@ import styles from './layout.module.css'
 import utilStyles from '../styles/utils.module.css'
 import Link from 'next/link'
 
+// Generic page layout
 const name = "Edward Cong";
 
 export default function Layout({ children, home }) {
