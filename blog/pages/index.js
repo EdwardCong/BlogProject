@@ -1,12 +1,10 @@
 import Head from 'next/head'
-import Link from 'next/link'
 import Layout from "../components/layout"
-import Posts from "./posts/posts"
-import { connectToDatabase } from '../util/mongodb'
+import Posts from "../lib/posts"
 import utilStyles from "../styles/utils.module.css"
+import { connectToDatabase } from '../util/mongodb'
 
 export default function Home({ posts }) {
-
   return (
     <Layout home>
       <Head>
@@ -23,16 +21,14 @@ export default function Home({ posts }) {
           <a href="https://nextjs.org/learn">this Next.js tutorial</a>.)
         </p>
       </section>
-      <Posts posts={posts} />
+      <Posts posts={posts}/>
     </Layout>
   )
 }
 
-// Query database to get the posts, use this prop for the "Posts" page
 export async function getStaticProps(context) {
-  const { client } = await connectToDatabase()
-  const res = await fetch(`http://localhost:3000/api/get`)
-  const posts = await res.json()
+  const res = await fetch(`http://localhost:3000/api/getAllPosts`);
+  const { posts } = await res.json();
 
   return {
     props: { posts }
