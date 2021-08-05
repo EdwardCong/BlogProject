@@ -1,9 +1,11 @@
 import Head from 'next/head'
+import Link from 'next/link'
 import Layout from "../components/layout"
-import Posts from "../lib/posts"
 import utilStyles from "../styles/utils.module.css"
-import { connectToDatabase } from '../util/mongodb'
+import Date from '../components/date'
+import { connectToDatabase } from '../util/mongodb';
 
+// TO-DO: sort the posts by date
 export default function Home({ posts }) {
   return (
     <Layout home>
@@ -11,26 +13,37 @@ export default function Home({ posts }) {
         <title>Edward's blog</title>
       </Head>
       <section className={utilStyles.headingMd}>
-        <p> Hello, I am Edward. I am a new grad from Lassonde School of Engineering, York University.
-          I am an aspiring Computer Engineer.
+        <p> Hello and welcome to my blog! I am Edward Cong, I am a new grad from Lassonde School of Engineering, York University.
+          I created this blog using nextjs to improve my skills in front-end development and using the newest technologies. I plan
+          on adding posts to showcase my personal projects. 
         </p>
-        <p>
-          This website was created with
-          <pre><code>npx create-next-app --example with-mongodb "your-project-name"</code></pre>
-          to have mongodb integration, and following a tutorial which you can find and use to build your own at {' '}
-          <a href="https://nextjs.org/learn">this Next.js tutorial</a>.)
-        </p>
+        {posts.map((post) => (
+        <div key={post._id}>
+          <Link href={`/posts/${post._id}`}>
+            <a><h2>{post.title}</h2></a>
+          </Link>
+          <Date date={post.created} />
+          <p>{post.body}</p>
+
+        </div>
+      ))}
       </section>
-      <Posts posts={posts}/>
     </Layout>
+
   )
 }
 
+// getStaticProps cannot make calls to Nextjs API routes because these functions are executed at build time, the server isn't running yet
 export async function getStaticProps(context) {
-  const res = await fetch(`http://localhost:3000/api/getAllPosts`);
-  const { posts } = await res.json();
+  const { db } = await connectToDatabase();
+  const posts = await db
+    .collection("posts")
+    .find({})
+    .toArray()
 
   return {
-    props: { posts }
-  }
+    props: {
+      posts: JSON.parse(JSON.stringify(posts))
+    },
+  };
 }
