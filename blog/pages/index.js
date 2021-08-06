@@ -3,7 +3,8 @@ import Link from 'next/link'
 import Layout from "../components/layout"
 import utilStyles from "../styles/utils.module.css"
 import Date from '../components/date'
-import { connectToDatabase } from '../util/mongodb';
+import { connectToDatabase } from '../util/mongodb'
+import { makePost } from '../util/makePost'
 
 // TO-DO: sort the posts by date
 export default function Home({ posts }) {
@@ -17,6 +18,7 @@ export default function Home({ posts }) {
           I created this blog using nextjs to improve my skills in front-end development and using the newest technologies. I plan
           on adding posts to showcase my personal projects. 
         </p>
+        <button onClick= {() => void makePost("yep", "2021-08-06", "testing the function")}>Make a post</button>
         {posts.map((post) => (
         <div key={post._id}>
           <Link href={`/posts/${post._id}`}>
