@@ -1,6 +1,8 @@
 import "../styles/global.css"
+import { AppProps } from "next/app"
+
 // This page is used to import global css to avoid unintentionally affecting css of other pages 
-const App = ({ Component, pageProps }) => {
+function App({ Component, pageProps }: AppProps) {
   return <Component {...pageProps} />
 }
 

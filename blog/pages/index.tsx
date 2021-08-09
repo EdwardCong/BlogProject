@@ -5,8 +5,9 @@ import utilStyles from "../styles/utils.module.css"
 import Date from '../components/date'
 import { connectToDatabase } from '../util/mongodb'
 import { makePost } from '../util/makePost'
+import { GetStaticProps } from 'next'
 
-// TO-DO: sort the posts by date
+// TO-DO: sort the posts by date, complete TypeScript integration
 export default function Home({ posts }) {
   return (
     <Layout home>
@@ -36,7 +37,7 @@ export default function Home({ posts }) {
 }
 
 // getStaticProps cannot make calls to Nextjs API routes because these functions are executed at build time, the server isn't running yet
-export async function getStaticProps(context) {
+export const getStaticProps: GetStaticProps = async () => {
   const { db } = await connectToDatabase();
   const posts = await db
     .collection("posts")
